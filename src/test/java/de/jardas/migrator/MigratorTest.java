@@ -1,6 +1,7 @@
 package de.jardas.migrator;
 
 import java.io.File;
+import java.util.UUID;
 
 import javax.sql.DataSource;
 
@@ -16,7 +17,7 @@ public class MigratorTest {
 
 	@Before
 	public void setUp() {
-		final String schema = "foobar";
+		final String schema = UUID.randomUUID().toString();
 		final DataSource dataSource = H2TestHelper.dataSource(schema);
 		adapter = new H2DatabaseAdapter(dataSource, schema);
 	}

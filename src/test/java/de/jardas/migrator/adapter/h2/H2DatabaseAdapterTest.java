@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.UUID;
 
 import org.h2.jdbcx.JdbcDataSource;
 import org.junit.Before;
@@ -15,7 +16,7 @@ public class H2DatabaseAdapterTest {
 	@Before
 	public void setUp() {
 		final JdbcDataSource dataSource = new JdbcDataSource();
-		final String schema = "foobar";
+		final String schema = UUID.randomUUID().toString();
 		dataSource.setURL("jdbc:h2:mem:" + schema);
 		dataSource.setUser("sa");
 		dataSource.setPassword("");
