@@ -7,7 +7,7 @@
 	</appender>
 	
 	<logger name="de.jardas.migrator">
-		<level value="DEBUG" />
+		<level value="TRACE" />
 	</logger>
 
 	<root>
