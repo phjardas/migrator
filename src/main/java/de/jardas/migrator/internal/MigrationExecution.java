@@ -3,6 +3,7 @@ package de.jardas.migrator.internal;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -95,6 +96,8 @@ public class MigrationExecution {
 						migration.getId());
 			}
 		}
+
+		Collections.sort(migrations, MigrationSource.ID_COMPARATOR);
 
 		return selected;
 	}

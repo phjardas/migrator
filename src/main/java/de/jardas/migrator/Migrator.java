@@ -6,16 +6,12 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import de.jardas.migrator.event.MigrationListener;
 import de.jardas.migrator.internal.MigrationExecution;
 import de.jardas.migrator.internal.Preconditions;
 import de.jardas.migrator.source.MigrationSource;
 
 public class Migrator {
-	private static final Logger LOG = LoggerFactory.getLogger(Migrator.class);
 	private DatabaseAdapter databaseAdapter;
 	private final List<MigrationSource> migrationResources = new ArrayList<MigrationSource>();
 	private final List<MigrationListener> listeners = new LinkedList<MigrationListener>();
