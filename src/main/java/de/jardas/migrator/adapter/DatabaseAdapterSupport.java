@@ -18,9 +18,9 @@ import de.jardas.migrator.internal.Preconditions;
 public abstract class DatabaseAdapterSupport implements DatabaseAdapter {
 	private static final Logger LOG = LoggerFactory
 			.getLogger(DatabaseAdapterSupport.class);
-	private final String tableName = "schema_migrations";
-	private final String idColumnName = "migration_id";
-	private final String executedAtColumnName = "executed_at";
+	private String tableName = "schema_migrations";
+	private String idColumnName = "migration_id";
+	private String executedAtColumnName = "executed_at";
 	private final DataSource dataSource;
 	private boolean tableChecked;
 	private Connection connection;
@@ -34,12 +34,24 @@ public abstract class DatabaseAdapterSupport implements DatabaseAdapter {
 		return tableName;
 	}
 
+	protected void setTableName(final String tableName) {
+		this.tableName = tableName;
+	}
+
 	protected String getIdColumnName() {
 		return idColumnName;
 	}
 
+	protected void setIdColumnName(final String idColumnName) {
+		this.idColumnName = idColumnName;
+	}
+
 	protected String getExecutedAtColumnName() {
 		return executedAtColumnName;
+	}
+
+	protected void setExecutedAtColumnName(final String executedAtColumnName) {
+		this.executedAtColumnName = executedAtColumnName;
 	}
 
 	@Override
@@ -50,11 +62,12 @@ public abstract class DatabaseAdapterSupport implements DatabaseAdapter {
 		final String sql = String.format(getIsMigrationAppliedPattern(),
 				tableName, idColumnName);
 		final PreparedStatement stmt = connection().prepareStatement(sql);
+		ResultSet rs = null;
 
 		try {
 			stmt.setString(1, migrationId);
 			LOG.trace("SQL: {} ({})", sql, new Object[] { migrationId, });
-			final ResultSet rs = stmt.executeQuery();
+			rs = stmt.executeQuery();
 
 			if (rs.next()) {
 				return rs.getBoolean(1);
@@ -62,6 +75,10 @@ public abstract class DatabaseAdapterSupport implements DatabaseAdapter {
 
 			return false;
 		} finally {
+			if (rs != null) {
+				rs.close();
+			}
+
 			stmt.close();
 		}
 	}

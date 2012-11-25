@@ -25,13 +25,14 @@ public abstract class InformationSchemaDatabaseAdapter extends
 	protected boolean isTableExisting() throws SQLException {
 		final String sql = getTableExistsQuery();
 		final PreparedStatement stmt = connection().prepareStatement(sql);
+		ResultSet rs = null;
 
 		try {
 			stmt.setString(1, schema);
 			stmt.setString(2, getTableName());
 			LOG.trace("SQL: {} ({})", sql, new Object[] { schema,
 					getTableName(), });
-			final ResultSet rs = stmt.executeQuery();
+			rs = stmt.executeQuery();
 
 			if (rs.next()) {
 				return rs.getBoolean(1);
@@ -39,6 +40,10 @@ public abstract class InformationSchemaDatabaseAdapter extends
 
 			return false;
 		} finally {
+			if (rs != null) {
+				rs.close();
+			}
+
 			stmt.close();
 		}
 	}

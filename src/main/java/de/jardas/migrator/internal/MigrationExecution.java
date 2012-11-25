@@ -24,8 +24,6 @@ public class MigrationExecution {
 	private final DatabaseAdapter databaseAdapter;
 	private final List<MigrationSource> migrations;
 	private final List<MigrationListener> listeners;
-	private int totalMigrationCount;
-	private int currentMigrationIndex;
 
 	public MigrationExecution(final DatabaseAdapter databaseAdapter,
 			final List<MigrationSource> migrations,
@@ -44,7 +42,8 @@ public class MigrationExecution {
 		}
 
 		LOG.info("Going to execute {} migrations.", selectedMigrations.size());
-		totalMigrationCount = selectedMigrations.size();
+		final int totalMigrationCount = selectedMigrations.size();
+		int currentMigrationIndex = 0;
 
 		for (final MigrationSource migration : selectedMigrations) {
 			fireEvent(new MigrationStartEvent(migration.getId(),

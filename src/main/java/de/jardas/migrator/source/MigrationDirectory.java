@@ -15,6 +15,10 @@ public class MigrationDirectory {
 	private static final Logger LOG = LoggerFactory
 			.getLogger(MigrationDirectory.class);
 
+	private MigrationDirectory() {
+		// utility class
+	}
+
 	public static List<MigrationSource> read(final File directory) {
 		Preconditions.notNull(directory, "directory");
 
@@ -30,12 +34,12 @@ public class MigrationDirectory {
 			}
 		});
 
-		LOG.debug("Loading {} migrations from directory {}", files.length,
-				directory.getAbsolutePath());
-
 		if (files == null || files.length == 0) {
 			return Collections.emptyList();
 		}
+
+		LOG.debug("Loading {} migrations from directory {}", files.length,
+				directory.getAbsolutePath());
 
 		final List<MigrationSource> sources = new ArrayList<MigrationSource>(
 				files.length);
