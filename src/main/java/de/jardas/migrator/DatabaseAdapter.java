@@ -1,15 +1,14 @@
 package de.jardas.migrator;
 
-import javax.sql.DataSource;
+import java.io.Closeable;
+import java.sql.SQLException;
+import java.util.Date;
 
-public interface DatabaseAdapter {
-	/**
-	 * Get the current version of the database.
-	 * 
-	 * @return the current database version or <code>null</code> if the database
-	 *         has no version information.
-	 */
-	String getDatabaseVersion(DataSource dataSource);
+public interface DatabaseAdapter extends Closeable {
+	boolean isMigrationApplied(String migrationId) throws SQLException;
 
-	void setDatabaseVersion(DataSource dataSource, String version);
+	void registerExecutedMigration(String migrationId, Date executedAt)
+			throws SQLException;
+
+	void executeStatement(String sql) throws SQLException;
 }

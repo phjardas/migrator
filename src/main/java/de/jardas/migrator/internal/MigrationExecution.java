@@ -1,18 +1,14 @@
 package de.jardas.migrator.internal;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
-
-import javax.sql.DataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.common.base.Predicate;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.Lists;
 
 import de.jardas.migrator.DatabaseAdapter;
 import de.jardas.migrator.MigrationException;
@@ -24,7 +20,6 @@ import de.jardas.migrator.event.MigrationSuccessEvent;
 public class MigrationExecution {
 	private static final Logger LOG = LoggerFactory
 			.getLogger(MigrationExecution.class);
-	private final DataSource dataSource;
 	private final DatabaseAdapter databaseAdapter;
 	private final List<URL> migrationResources;
 	private final List<MigrationListener> listeners;
@@ -32,18 +27,16 @@ public class MigrationExecution {
 	private List<Migration> migrations;
 	private int currentMigrationIndex;
 
-	public MigrationExecution(final DataSource dataSource,
-			final DatabaseAdapter databaseAdapter,
+	public MigrationExecution(final DatabaseAdapter databaseAdapter,
 			final List<URL> migrationResources,
 			final List<MigrationListener> listeners) {
-		this.dataSource = dataSource;
 		this.databaseAdapter = databaseAdapter;
 		this.migrationResources = migrationResources;
 		this.listeners = listeners;
 		totalMigrationCount = migrations.size();
 	}
 
-	public void execute() {
+	public void execute() throws SQLException {
 		migrations = loadMigrations();
 		migrations = selectMigrations(migrations);
 
@@ -62,9 +55,10 @@ public class MigrationExecution {
 				LOG.info("Executing migration '{}' ({}/{})", new Object[] {
 						migration.getId(), currentMigrationIndex,
 						totalMigrationCount, });
+				final Date executedAt = new Date();
 				executeMigration(migration);
-				databaseAdapter.setDatabaseVersion(dataSource,
-						migration.getId());
+				databaseAdapter.registerExecutedMigration(migration.getId(),
+						executedAt);
 			} catch (final RuntimeException e) {
 				final String error = String.format(
 						"Migration '%s' (%d/%d) failed: %s", migration.getId(),
@@ -93,30 +87,17 @@ public class MigrationExecution {
 		return migrations;
 	}
 
-	private List<Migration> selectMigrations(final List<Migration> migrations) {
-		final String databaseVersion = databaseAdapter
-				.getDatabaseVersion(dataSource);
+	private List<Migration> selectMigrations(final List<Migration> migrations)
+			throws SQLException {
+		final List<Migration> selected = new ArrayList<Migration>();
 
-		if (databaseVersion == null) {
-			return migrations;
+		for (final Migration migration : migrations) {
+			if (!databaseAdapter.isMigrationApplied(migration.getId())) {
+				selected.add(migration);
+			}
 		}
 
-		return Lists.newArrayList(Collections2.filter(migrations,
-				new Predicate<Migration>() {
-					@Override
-					public boolean apply(final Migration migration) {
-						return isMigrationApplicable(migration, databaseVersion);
-					}
-				}));
-	}
-
-	/**
-	 * Does the given migration need to be executed for the given database
-	 * version?
-	 */
-	private boolean isMigrationApplicable(final Migration migration,
-			final String databaseVersion) {
-		return migration.getId().compareToIgnoreCase(databaseVersion) > 0;
+		return selected;
 	}
 
 	private void fireEvent(final MigrationEvent event) {

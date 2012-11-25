@@ -1,35 +1,43 @@
 package de.jardas.migrator;
 
+import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.sql.DataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.jardas.migrator.event.MigrationListener;
 import de.jardas.migrator.internal.MigrationExecution;
 import de.jardas.migrator.internal.Preconditions;
 
 public class Migrator {
-	private DataSource dataSource;
+	private static final Logger LOG = LoggerFactory.getLogger(Migrator.class);
 	private DatabaseAdapter databaseAdapter;
 	private final List<URL> migrationResources = new ArrayList<URL>();
 	private final List<MigrationListener> listeners = new LinkedList<MigrationListener>();
 
 	public void execute() {
-		Preconditions.notNull(dataSource, "dataSource");
 		Preconditions.notNull(databaseAdapter, "databaseAdapter");
 
-		final MigrationExecution execution = new MigrationExecution(dataSource,
+		final MigrationExecution execution = new MigrationExecution(
 				databaseAdapter, migrationResources, listeners);
-		execution.execute();
-	}
 
-	public Migrator setDataSource(final DataSource dataSource) {
-		this.dataSource = dataSource;
-		return this;
+		try {
+			execution.execute();
+		} catch (final SQLException e) {
+			throw new MigrationException("Error during migration: " + e, e);
+		} finally {
+			try {
+				databaseAdapter.close();
+			} catch (final IOException e) {
+				LOG.warn("Error closing database adapter: " + e, e);
+			}
+		}
 	}
 
 	public Migrator setDatabaseAdapter(final DatabaseAdapter databaseAdapter) {
