@@ -1,10 +1,18 @@
 package de.jardas.migrator.internal;
 
+import java.util.Comparator;
+
 import com.google.common.base.Objects;
 import com.google.common.base.Splitter;
 
-
 public class Migration {
+	public static final Comparator<Migration> ID_COMPARATOR = new Comparator<Migration>() {
+		@Override
+		public int compare(final Migration o1, final Migration o2) {
+			return o1.getId().compareToIgnoreCase(o2.getId());
+		}
+	};
+
 	private final String id;
 	private final String content;
 
