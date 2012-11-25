@@ -1,6 +1,5 @@
 package de.jardas.migrator;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,12 +30,6 @@ public class Migrator {
 			execution.execute();
 		} catch (final SQLException e) {
 			throw new MigrationException("Error during migration: " + e, e);
-		} finally {
-			try {
-				databaseAdapter.close();
-			} catch (final IOException e) {
-				LOG.warn("Error closing database adapter: " + e, e);
-			}
 		}
 	}
 
