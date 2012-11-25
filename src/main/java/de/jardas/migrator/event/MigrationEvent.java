@@ -1,5 +1,7 @@
 package de.jardas.migrator.event;
 
+import com.google.common.base.Objects;
+
 public abstract class MigrationEvent {
 	private final String migrationId;
 	private final int currentMigrationIndex;
@@ -22,5 +24,15 @@ public abstract class MigrationEvent {
 
 	public int getTotalMigrationCount() {
 		return totalMigrationCount;
+	}
+
+	@Override
+	public String toString() {
+		return Objects
+				.toStringHelper(this)
+				.add("migrationId", migrationId)
+				.add("progress",
+						currentMigrationIndex + 1 + "/" + totalMigrationCount)
+				.toString();
 	}
 }

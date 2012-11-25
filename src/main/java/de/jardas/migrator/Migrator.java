@@ -1,7 +1,6 @@
 package de.jardas.migrator;
 
 import java.io.IOException;
-import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,11 +13,12 @@ import org.slf4j.LoggerFactory;
 import de.jardas.migrator.event.MigrationListener;
 import de.jardas.migrator.internal.MigrationExecution;
 import de.jardas.migrator.internal.Preconditions;
+import de.jardas.migrator.source.MigrationSource;
 
 public class Migrator {
 	private static final Logger LOG = LoggerFactory.getLogger(Migrator.class);
 	private DatabaseAdapter databaseAdapter;
-	private final List<URL> migrationResources = new ArrayList<URL>();
+	private final List<MigrationSource> migrationResources = new ArrayList<MigrationSource>();
 	private final List<MigrationListener> listeners = new LinkedList<MigrationListener>();
 
 	public void execute() {
@@ -45,12 +45,18 @@ public class Migrator {
 		return this;
 	}
 
-	public Migrator setMigrationResources(
-			final Collection<URL> migrationResources) {
+	public Migrator addMigrationResources(
+			final Collection<MigrationSource> migrationResources) {
 		if (migrationResources != null) {
 			this.migrationResources.addAll(migrationResources);
 		}
 
+		return this;
+	}
+
+	public Migrator addMigrationResource(final MigrationSource migrationResource) {
+		Preconditions.notNull(migrationResource, "migrationResource");
+		migrationResources.add(migrationResource);
 		return this;
 	}
 

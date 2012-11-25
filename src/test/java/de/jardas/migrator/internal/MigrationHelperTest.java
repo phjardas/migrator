@@ -6,17 +6,14 @@ import java.util.Iterator;
 
 import org.junit.Test;
 
-import de.jardas.migrator.internal.Migration;
-
-public class MigrationTest {
+public class MigrationHelperTest {
 	@Test
 	public void getLines() {
 		final String line1 = "select * from foo";
 		final String line2 = "select * from bar";
 
-		final Migration m = new Migration("foobar", "  " + line1 + "\t;\n"
-				+ line2 + " ;\n  \n");
-		final Iterable<String> lines = m.getLines();
+		final Iterable<String> lines = MigrationHelper.getLines("  " + line1
+				+ "\t;\n" + line2 + " ;\n  \n");
 		final Iterator<String> it = lines.iterator();
 		final String l1 = it.next();
 		final String l2 = it.next();
