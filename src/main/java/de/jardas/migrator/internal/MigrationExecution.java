@@ -51,7 +51,7 @@ public class MigrationExecution {
 
 			try {
 				LOG.info("Executing migration '{}' ({}/{})", new Object[] {
-						migration.getId(), currentMigrationIndex,
+						migration.getId(), currentMigrationIndex + 1,
 						totalMigrationCount, });
 				final Date executedAt = new Date();
 				executeMigration(migration);
@@ -60,7 +60,7 @@ public class MigrationExecution {
 			} catch (final Exception e) {
 				final String error = String.format(
 						"Migration '%s' (%d/%d) failed: %s", migration.getId(),
-						currentMigrationIndex, totalMigrationCount, e);
+						currentMigrationIndex + 1, totalMigrationCount, e);
 				LOG.error(error, e);
 				throw new MigrationException(error, e);
 			}
