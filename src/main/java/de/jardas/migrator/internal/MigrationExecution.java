@@ -97,7 +97,7 @@ public class MigrationExecution {
 			}
 		}
 
-		Collections.sort(migrations, MigrationSource.ID_COMPARATOR);
+		Collections.sort(selected, MigrationSource.ID_COMPARATOR);
 
 		return selected;
 	}
