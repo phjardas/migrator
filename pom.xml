@@ -5,10 +5,33 @@
 
 	<groupId>de.jardas.migrator</groupId>
 	<artifactId>migrator</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 
 	<name>Migrator</name>
 	<description>A simple database evolution tool, embedded into your Java application.</description>
+
+	<scm>
+		<developerConnection>scm:git:git@github.com:phjardas/premailer.git</developerConnection>
+	</scm>
+
+	<distributionManagement>
+		<repository>
+			<id>jardas-releases</id>
+			<url>http://www.jardas.de:8081/nexus/content/repositories/releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>jardas-snapshots</id>
+			<url>http://www.jardas.de:8081/nexus/content/repositories/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+	<developers>
+		<developer>
+			<id>phjardas</id>
+			<name>Philipp Jardas</name>
+			<email>philipp@jardas.de</email>
+		</developer>
+	</developers>
 
 	<properties>
 		<slf4j.version>1.7.2</slf4j.version>
