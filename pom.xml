@@ -4,7 +4,7 @@
 
 	<groupId>de.jardas.migrator</groupId>
 	<artifactId>migrator</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1-SNAPSHOT</version>
 
 	<name>Migrator</name>
 	<description>A simple database evolution tool, embedded into your Java application.</description>
