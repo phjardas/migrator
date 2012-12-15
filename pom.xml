@@ -11,7 +11,7 @@
 	<description>A simple database evolution tool, embedded into your Java application.</description>
 
 	<scm>
-		<developerConnection>scm:git:git@github.com:phjardas/premailer.git</developerConnection>
+		<developerConnection>scm:git:git@github.com:phjardas/migrator.git</developerConnection>
 	</scm>
 
 	<distributionManagement>
