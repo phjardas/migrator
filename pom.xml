@@ -16,11 +16,11 @@
 	<distributionManagement>
 		<repository>
 			<id>jardas-releases</id>
-			<url>http://www.jardas.de:8081/nexus/content/repositories/releases/</url>
+			<url>http://nexus.jardas.de/content/repositories/releases/</url>
 		</repository>
 		<snapshotRepository>
 			<id>jardas-snapshots</id>
-			<url>http://www.jardas.de:8081/nexus/content/repositories/snapshots/</url>
+			<url>http://nexus.jardas.de/content/repositories/snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>
 
